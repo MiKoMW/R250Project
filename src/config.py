@@ -13,15 +13,15 @@ vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitte
 log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 
 # Hyperparameters
-mode = "MLE"   # other options: RL/GTI/SO/SIO/DAGGER/DAGGER*
+mode = "DAGGER"   # other options: RL/GTI/SO/SIO/DAGGER/DAGGER*
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
 k2 = 3000.
 hidden_dim= 256
 emb_dim= 128
-batch_size= 40
-sample_size= 20
+batch_size= 8
+sample_size= 4
 max_enc_steps= 20
 max_dec_steps= 20
 beam_size= 8
