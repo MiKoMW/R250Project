@@ -23,6 +23,9 @@ use_cuda = config.use_gpu and torch.cuda.is_available()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
 
 
+# TODO: ADDED
+tf.compat.v1.disable_eager_execution()
+
 class Train(object):
     def __init__(self):
         self.vocab = Vocab(config.vocab_path, config.vocab_size)
