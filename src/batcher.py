@@ -157,6 +157,7 @@ class Batcher(object):
     self.mode = mode
     self.batch_size = batch_size
     # Initialize a queue of Batches waiting to be used, and a queue of Examples waiting to be batched
+    # TODO: 这有啥用？
     self._batch_queue = Queue.Queue(self.BATCH_QUEUE_MAX)
     self._example_queue = Queue.Queue(self.BATCH_QUEUE_MAX * self.batch_size)
 
@@ -167,6 +168,7 @@ class Batcher(object):
       self._bucketing_cache_size = 1 # only load one batch's worth of examples before bucketing; this essentially means no bucketing
       self._finished_reading = False # this will tell us when we're finished reading the dataset
     else:
+      # 这些都有啥用？？
       self._num_example_q_threads = 1 #16 # num threads to fill example queue
       self._num_batch_q_threads = 1 #4  # num threads to fill batch queue
       self._bucketing_cache_size = 1 #100 # how many batches-worth of examples to load into cache before bucketing

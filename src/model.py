@@ -43,15 +43,25 @@ class Encoder(nn.Module):
         self.embedding = nn.Embedding(config.vocab_size, config.emb_dim)
         init_wt_normal(self.embedding.weight)
         self.lstm = nn.LSTM(config.emb_dim, config.hidden_dim, num_layers=1, 
-                            batch_first=True, bidirectional=True)
+                            batch_first=True, bidirectional=True) # BILSTM！！
         init_lstm_wt(self.lstm)
         self.W_h = nn.Linear(config.hidden_dim * 2, config.hidden_dim * 2, bias=False)
 
     # seq_lens should be in descending order
     def forward(self, input, seq_lens):
+        # print("INPUT")
+        # print((input.size()))
         embedded = self.embedding(input)
         packed = pack_padded_sequence(embedded, seq_lens, batch_first=True)
-        output, hidden = self.lstm(packed) # hidden = ((2 x B x H), (2 x B x H))
+        output, hidden = self.lstm(packed) # hidden = ((2 x B x H), (2 x B x H)) [ 8 * 20]
+
+        # print("output")
+        # print((output))
+        # print("hidden")
+        # print((len(hidden)))
+        # print((hidden))
+        # print((hidden))
+
         encoder_outputs, _ = pad_packed_sequence(output, batch_first=True) # B x L x 2H
         encoder_feature = encoder_outputs.contiguous().view(-1, 2*config.hidden_dim) # BL x 2H
         encoder_feature = self.W_h(encoder_feature) # BL x 2H
@@ -125,7 +135,7 @@ class Decoder(nn.Module):
         init_wt_normal(self.embedding.weight)
         self.x_context = nn.Linear(config.hidden_dim * 2 + config.emb_dim, config.emb_dim)
         self.lstm = nn.LSTM(config.emb_dim, config.hidden_dim, num_layers=1, 
-                            batch_first=True, bidirectional=False)
+                            batch_first=True, bidirectional=False) # Unidirection lstm decoder
         init_lstm_wt(self.lstm)
         
         if config.pointer_gen:
@@ -169,6 +179,8 @@ class Decoder(nn.Module):
         output = self.out1(output) # B x H
         output = self.out2(output) # B x V
         vocab_dist = F.softmax(output, dim=1)
+        # print("vocab_dist")
+        # print(vocab_dist.size())
 
         if config.pointer_gen:
             vocab_dist_ = p_gen * vocab_dist

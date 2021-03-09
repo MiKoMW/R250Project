@@ -23,7 +23,7 @@ use_cuda = config.use_gpu and torch.cuda.is_available()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.INFO)
 
 
-# TODO: ADDED
+# TODO: ADDED for dev
 tf.compat.v1.disable_eager_execution()
 
 class Train(object):
@@ -32,7 +32,10 @@ class Train(object):
         self.batcher = Batcher(config.train_data_path, self.vocab, mode='train',
                                batch_size=config.batch_size, single_pass=False)
         time.sleep(5)
-        
+
+        # print("BATCH")
+        # print(self.batcher)
+
         if not os.path.exists(config.log_root):
             os.mkdir(config.log_root)
 
@@ -98,15 +101,74 @@ class Train(object):
         dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \
             get_output_from_batch(batch, use_cuda)
 
+        #
+        # print("ENC_BATCH")
+        # print(len(enc_batch))
+        # print(len(enc_batch[0]))
+        #
+        # print("enc_padding_mask")
+        # print(enc_padding_mask)
+        # print(len(enc_padding_mask))
+        # print(len(enc_padding_mask[0]))
+
+        # print("enc_lens")
+        # print(enc_lens)
+        # print("enc_batch_extend_vocab")
+        # print(enc_batch_extend_vocab)
+
         self.optimizer.zero_grad()
         
         encoder_outputs, encoder_feature, encoder_hidden = self.model.encoder(enc_batch, enc_lens)
+
+        # print("encoder_outputs")
+        # print(encoder_outputs.siz)
+
+
         s_t_1 = self.model.reduce_state(encoder_hidden)
         
         nll_list= []
+
+        # sample_size 是啥？
+
         gen_summary = torch.LongTensor(config.batch_size*[config.sample_size*[[2]]]) # B x S x 1
+
+        # print("gen_summary")
+        # print(gen_summary.size())
+        # print(gen_summary)
+
+
         if use_cuda: gen_summary = gen_summary.cuda()
         preds_y = gen_summary.squeeze(2) # B x S
+
+
+        # TODO: Print Gold Here!!!!
+        # print("preds_y")
+        # print(preds_y.size())
+        # print(preds_y)
+        # print(self.vocab.size())
+        # print("temp")
+        # from data import outputids2words
+        # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[1])),self.vocab,None)
+        # print(temp)
+        # # for item in dec_batch[1]:
+        # #     temp = self.vocab.id2word(item.item())
+        # #     from data import outputids2words(dec_batch[1])
+        # #     print(temp)
+
+        from data import outputids2words
+
+        # print("dec_batch")
+        # print(dec_batch[0])
+        # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[0])),self.vocab,None)
+        # print(temp)
+        # print()
+        # print("target_batch")
+        # print(target_batch[0])
+        # temp = outputids2words(list(map(lambda x : x.item(), target_batch[0])),self.vocab,None)
+        # print(temp)
+        # print()
+
+
         for di in range(min(config.max_dec_steps, dec_batch.size(1))):
             # Select the current input word
             p1 = np.random.uniform()
@@ -114,7 +176,11 @@ class Train(object):
                 y_t_1 = dec_batch[:, di]
             else: # use decoded word
                 y_t_1 = preds_y[:, 0]
-            
+
+            # print("y_t_1")
+            # # print(y_t_1)
+            # print("dec_batch")
+            # print(dec_batch)
             final_dist, s_t_1,  c_t_1, attn_dist, p_gen, next_coverage = self.model.decoder(y_t_1, s_t_1,
                                                         encoder_outputs, encoder_feature, enc_padding_mask, 
                                                         c_t_1, extra_zeros, enc_batch_extend_vocab,

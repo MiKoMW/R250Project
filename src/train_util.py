@@ -30,13 +30,24 @@ def get_input_from_batch(batch, use_cuda):
         enc_batch = enc_batch.cuda()
         enc_padding_mask = enc_padding_mask.cuda()
         c_t_1 = c_t_1.cuda()
-        
-    if enc_batch_extend_vocab is not None:
-        enc_batch_extend_vocab = enc_batch_extend_vocab.cuda()
-    if extra_zeros is not None:
-        extra_zeros = extra_zeros.cuda()
-    if coverage is not None:
-        coverage = coverage.cuda()
+
+    if use_cuda:
+        if enc_batch_extend_vocab is not None:
+          enc_batch_extend_vocab = enc_batch_extend_vocab.cuda()
+        if extra_zeros is not None:
+          extra_zeros = extra_zeros.cuda()
+        if coverage is not None:
+          coverage = coverage.cuda()
+
+    #
+    # # TODO: REMOVE THIS WHEN USING GPUS!!!!!!!!
+    # if enc_batch_extend_vocab is not None:
+    #     enc_batch_extend_vocab = enc_batch_extend_vocab
+    # if extra_zeros is not None:
+    #     extra_zeros = extra_zeros
+    # if coverage is not None:
+    #     coverage = coverage
+
     return enc_batch, enc_padding_mask, enc_lens, enc_batch_extend_vocab, extra_zeros, c_t_1, coverage
 
 
