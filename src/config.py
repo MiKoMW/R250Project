@@ -11,9 +11,10 @@ eval_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/tw
 decode_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/test_*")
 vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
 log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
+log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
 
 # Hyperparameters
-mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
+mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
