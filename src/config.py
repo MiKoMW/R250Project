@@ -10,6 +10,8 @@ train_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/t
 eval_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/val_*")
 decode_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/test_*")
 vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
+# log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
+log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
 log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
 
