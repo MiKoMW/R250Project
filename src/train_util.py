@@ -70,15 +70,36 @@ def get_output_from_batch(batch, use_cuda):
 
 def compute_reward(batch, decode_batch, vocab, mode, use_cuda):
     target_sents = batch.original_abstracts  # list of string
-    decode_batch = decode_batch.cpu().numpy()  # B x S x L
+
+    # Back to CPU.
+    decode_batch = decode_batch.cpu().numpy()  # B x S x L     batch size * sample size  * sentence length
+
+
+    # print("decode_batch")
+    # print(len(decode_batch))
+    # print(len(decode_batch[0]))
+
     output_ids = decode_batch[:, :, 1:]
+
+    from data import outputids2words
+
+
+    #
+    # print("output_ids")
+    # print(output_ids[0][0])
+    # temp = outputids2words(list(map(lambda x : x.item(), decode_batch[0][0])),vocab,None)
+    # print(temp)
+
     all_rewards = torch.zeros((config.batch_size, config.sample_size)) # B x S
     if use_cuda: all_rewards = all_rewards.cuda()
+
+    # Emm loop.
     for i in range(config.batch_size):
         for j in range(config.sample_size):
             words = data.outputids2words(list(output_ids[i,j,:]), vocab,
                                        (batch.art_oovs[i] if config.pointer_gen else None))
             # Remove the [STOP] token from decoded_words, if necessary
+            # 机智。
             try:
                 fst_stop_idx = words.index(data.STOP_DECODING)
                 words = words[:fst_stop_idx]

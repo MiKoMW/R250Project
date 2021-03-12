@@ -95,16 +95,23 @@ class Train(object):
         return start_iter, start_loss
     
 
+
+    # TODO: LOOK AT HERE!
     def train_one_batch(self, batch, alpha, beta):
+
+
         enc_batch, enc_padding_mask, enc_lens, enc_batch_extend_vocab, extra_zeros, c_t_1, coverage = \
             get_input_from_batch(batch, use_cuda)
+
+
         dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \
             get_output_from_batch(batch, use_cuda)
 
-        #
+        # with ukn tokens
         # print("ENC_BATCH")
         # print(len(enc_batch))
         # print(len(enc_batch[0]))
+        # print((enc_batch[0]))
         #
         # print("enc_padding_mask")
         # print(enc_padding_mask)
@@ -113,10 +120,15 @@ class Train(object):
 
         # print("enc_lens")
         # print(enc_lens)
-        # print("enc_batch_extend_vocab")
-        # print(enc_batch_extend_vocab)
 
-        self.optimizer.zero_grad()
+        #
+        # # With full vocab
+        # print("enc_batch_extend_vocab")
+        # print(enc_batch_extend_vocab[0])
+
+        # print("extra_zeros")
+        # print(extra_zeros)
+        # self.optimizer.zero_grad()
         
         encoder_outputs, encoder_feature, encoder_hidden = self.model.encoder(enc_batch, enc_lens)
 
@@ -125,12 +137,17 @@ class Train(object):
 
 
         s_t_1 = self.model.reduce_state(encoder_hidden)
-        
+
+
+
+        # 从这里开始。
         nll_list= []
 
-        # sample_size 是啥？
+        # sample_size 是啥？每个句子几个sample，论文中未提及。
 
-        gen_summary = torch.LongTensor(config.batch_size*[config.sample_size*[[2]]]) # B x S x 1
+        # Why all 2？
+        gen_summary = torch.LongTensor(config.batch_size*[config.sample_size*[[2]]]) # B x S x 1 里面全是2。
+
 
         # print("gen_summary")
         # print(gen_summary.size())
@@ -138,7 +155,7 @@ class Train(object):
 
 
         if use_cuda: gen_summary = gen_summary.cuda()
-        preds_y = gen_summary.squeeze(2) # B x S
+        preds_y = gen_summary.squeeze(2) # B x S 里面全是2 2 是 [START]
 
 
         # TODO: Print Gold Here!!!!
@@ -147,16 +164,31 @@ class Train(object):
         # print(preds_y)
         # print(self.vocab.size())
         # print("temp")
+
+
+        # Check those
+        # dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \
+
+
+
         # from data import outputids2words
         # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[1])),self.vocab,None)
         # print(temp)
+
+        # # 1 word 0 pad
+        # print("dec_padding_mask")
+
+
+        # print("target_batch")
+        # print(target_batch[1])
+        #
         # # for item in dec_batch[1]:
         # #     temp = self.vocab.id2word(item.item())
         # #     from data import outputids2words(dec_batch[1])
         # #     print(temp)
 
-        from data import outputids2words
-
+        # from data import outputids2words
+        #
         # print("dec_batch")
         # print(dec_batch[0])
         # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[0])),self.vocab,None)
@@ -166,10 +198,13 @@ class Train(object):
         # print(target_batch[0])
         # temp = outputids2words(list(map(lambda x : x.item(), target_batch[0])),self.vocab,None)
         # print(temp)
-        # print()
-
+        # # print()
+        #
+        # print("id 2 is:")
+        # print(self.vocab.id2word(2))
 
         for di in range(min(config.max_dec_steps, dec_batch.size(1))):
+
             # Select the current input word
             p1 = np.random.uniform()
             if p1 < alpha: # use ground truth word
@@ -177,25 +212,77 @@ class Train(object):
             else: # use decoded word
                 y_t_1 = preds_y[:, 0]
 
+
+            # print("DI")
+            # print(di)
+            # print("dec_batch[:, di]")
+            # print(dec_batch[:, di])
+
+            # print("y_t_1 = preds_y[:, 0]")
+            # print(preds_y[:, 0])
+            # print()
             # print("y_t_1")
             # # print(y_t_1)
             # print("dec_batch")
             # print(dec_batch)
+
+
+            # y_t_1 input word from previous timestep
+            # s_t_1 hidden states from previous timestep
+
+            # encoder_outputs, encoder_feature, enc_padding_mask for attentions? Not going to do this.
+            # If time permit, gonna to implement copy mechanism in dialogue act :D
+
+            # extra_zeros seems not useful in sc lstm
+
             final_dist, s_t_1,  c_t_1, attn_dist, p_gen, next_coverage = self.model.decoder(y_t_1, s_t_1,
                                                         encoder_outputs, encoder_feature, enc_padding_mask, 
                                                         c_t_1, extra_zeros, enc_batch_extend_vocab,
                                                         coverage, di)
-            
+
+
+            # 重点是dist instead of argmax word :D
+
             # Select the current output word
+
             p2 = np.random.uniform()
             if p2 < beta: # sample the ground truth word
                 target = target_batch[:, di]
                 sampled_batch = torch.stack(config.sample_size*[target], 1) # B x S
+
+                # print("sampled_batch")
+                # print(sampled_batch)
             else: # randomly sample a word with given probabilities
                 sampled_batch = torch.multinomial(final_dist, config.sample_size, replacement=True) # B x S
-            
+
+            # print("target_batch[:, di]")
+            # print(target_batch[:, di])
+            # tensor([[2973, 156, 1212, 782],
+            #         [6, 3880, 4680, 3930],
+            #         [2453, 5, 973, 1808],
+            #         [53, 1338, 53, 1000],
+            #         [1088, 4271, 4251, 607],
+            #         [1557, 13, 1048, 2726],
+            #         [5000, 4, 5000, 3817],
+            #         [4790, 4337, 2827, 323]])
+
+            # print("sampled_batch")
+            # print(sampled_batch)
+            # print(sampled_batch.size())
+
+
+
+
             # Compute the NLL
-            probs = torch.gather(final_dist, 1, sampled_batch).squeeze()
+            # 机智函数 ：D
+            #
+            # print("probs")
+            # print(torch.gather(final_dist, 1, sampled_batch))
+
+            # probs = torch.gather(final_dist, 1, sampled_batch).squeeze()
+            probs = torch.gather(final_dist, 1, sampled_batch)
+
+            # print(probs)
             step_nll = -torch.log(probs + config.eps)
             
             if config.is_coverage:
@@ -203,7 +290,8 @@ class Train(object):
                 step_nll = step_nll + config.cov_loss_wt * step_coverage_loss
                 coverage = next_coverage
             nll_list.append(step_nll)
-                
+
+
             # Store the decoded words in preds_y
             preds_y = gen_preds(sampled_batch, use_cuda)
             # Add the decoded words into gen_summary (mixed with ground truth and decoded words)
@@ -211,7 +299,11 @@ class Train(object):
 
         # compute the REINFORCE score        
         nll = torch.sum(torch.stack(nll_list, 2), 2)  # B x S
+
+
+
         all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, config.mode, use_cuda) # B x S, 1
+
         batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
         loss = torch.mean(batch_loss)
 

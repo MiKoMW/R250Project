@@ -14,7 +14,7 @@ log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
 
 # Hyperparameters
-mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
+mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -31,7 +31,7 @@ vocab_size= 5000
 
 max_iterations = 5000000
 lr = 1e-5
-pointer_gen = True
+pointer_gen = False
 is_coverage = False
 lr_coverage = 0.15
 cov_loss_wt = 1.0
