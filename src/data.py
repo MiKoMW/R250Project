@@ -17,6 +17,7 @@ START_DECODING = '[START]' # This has a vocab id, which is used at the start of 
 STOP_DECODING = '[STOP]' # This has a vocab id, which is used at the end of untruncated target sequences
 # Note: none of <s>, </s>, [PAD], [UNK], [START], [STOP] should appear in the vocab file.
 
+EQ_FOR_DIALACT = '='
 
 class Vocab(object):
   def __init__(self, vocab_file, max_size):
@@ -25,7 +26,7 @@ class Vocab(object):
     self._count = 0 # keeps track of total number of words in the Vocab
 
     # [UNK], [PAD], [START] and [STOP] get the ids 0,1,2,3.
-    for w in [UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING]:
+    for w in [UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING, EQ_FOR_DIALACT]:
       self._word_to_id[w] = self._count
       self._id_to_word[self._count] = w
       self._count += 1
@@ -74,10 +75,10 @@ class Vocab(object):
 
 def example_generator(data_path, single_pass):
   while True:
-    filelist = glob.glob(data_path) # get the list of datafiles
+    # filelist = glob.glob(data_path) # get the list of datafiles
 
-    print("filepath")
-    print(data_path)
+    # print("filepath")
+    # print(data_path)
     # train_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/train_*")
     # eval_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/val_*")
     # decode_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/test_*")

@@ -302,7 +302,8 @@ class Batcher(object):
           new_t.daemon = True
           new_t.start()
 
-
+  # TODO: HERE TO change the input data
+  # HERE to deal with data.
   def text_generator(self, example_generator):
     while True:
       try:
@@ -319,9 +320,21 @@ class Batcher(object):
         # print(dial_turn)
         # print(dial_utt)
         # print(dial_acts)
+        #
+        act_str = ""
+        for key in dial_acts.keys():
 
-        article_text = dial_utt["delex"]
+            act_str += key
+            act_str += " ( "
+            temp = list(map(lambda x : x[0] + " = " + x[2], dial_acts[key]))
+            temp = " , ".join(temp)
+            act_str = act_str + temp +  " ) "
+
+        # surface forms
         abstract_text = dial_utt["delex"]
+
+        # ACT
+        article_text = act_str
 
         #
         # article_text = e.features.feature['article'].bytes_list.value[0].decode() # the article text was saved under the key 'article' in the data files

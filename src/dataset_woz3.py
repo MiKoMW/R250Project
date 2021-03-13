@@ -273,7 +273,7 @@ class DatasetWoz3(object):
 #		for _type in ['train', 'valid', 'test_seen', 'test_unseen']:
 			self.n_batch[_type] = len(self.data[_type]) // self.batch_size
 
-		self.printDataInfo()
+		# self.printDataInfo()
 
 
 	

@@ -155,8 +155,8 @@ class Train(object):
         # print(self.vocab.size())
         # print("temp")
         # from data import outputids2words
-        # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[1])),self.vocab,None)
-        # print(temp)
+        # temp = outputids2words(list(map(lambda x : x.item(), enc_batch[1])),self.vocab,None)
+        # print(" ".join(temp))
         # # for item in dec_batch[1]:
         # #     temp = self.vocab.id2word(item.item())
         # #     from data import outputids2words(dec_batch[1])
