@@ -12,9 +12,9 @@ decode_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/
 # vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
 vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/resource/woz3/woz_vocab.txt")
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
-log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_rl")
+log_root = os.path.join(root_dir, "R250Project/log_rl")
+log_root = os.path.join(root_dir, "R250Project/log_twitter")
+log_root = os.path.join(root_dir, "R250Project/log_MLE")
 
 # Hyperparameters
 mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
