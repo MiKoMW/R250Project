@@ -96,11 +96,14 @@ def example_generator(data_path, single_pass):
 
     con = 0
     temp_len = len(examples)
-    while True:
-      temp_example = examples[con]
-      con = con + 1
-      con = con % temp_len
-      yield temp_example
+
+    for item in examples:
+      yield item
+    # while True:
+    #   temp_example = examples[con]
+    #   con = con + 1
+    #   con = con % temp_len
+    #   yield temp_example
 
     if single_pass:
         # print("example_generator completed reading all datafiles. No more data.")
