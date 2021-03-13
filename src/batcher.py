@@ -175,8 +175,8 @@ class Batcher(object):
   BATCH_QUEUE_MAX = 10 # max number of batches the batch_queue can hold
   def __init__(self, data_path, vocab, mode, batch_size, single_pass):
     self._data_path = data_path
-    print("DATA PATH")
-    print(data_path)
+    # print("DATA PATH")
+    # print(data_path)
     self._vocab = vocab
     self._single_pass = single_pass
     self.mode = mode
