@@ -6,15 +6,29 @@ root_dir = os.path.join(root_dir, "Desktop")
 print_interval = 100
 save_model_iter = 1000
 
-train_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/train_*")
-eval_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/val_*")
-decode_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/test_*")
+# train_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/train_*")
+# eval_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/val_*")
+# decode_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/test_*")
+# # vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
+# vocab_path = os.path.join(root_dir, "R250Project/resource/woz3/woz_vocab.txt")
+# # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
+# log_root = os.path.join(root_dir, "R250Project/log_rl")
+# log_root = os.path.join(root_dir, "R250Project/log_twitter")
+# log_root = os.path.join(root_dir, "R250Project/log_MLE")
+
+train_data_path = "../data/twitter_url/chunked/train_*"
+eval_data_path =  "../data/twitter_url/chunked/val_*"
+decode_data_path = "../data/twitter_url/chunked/test_*"
 # vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
-vocab_path = os.path.join(root_dir, "R250Project/resource/woz3/woz_vocab.txt")
+vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-log_root = os.path.join(root_dir, "R250Project/log_rl")
-log_root = os.path.join(root_dir, "R250Project/log_twitter")
-log_root = os.path.join(root_dir, "R250Project/log_MLE")
+log_root = "../log_rl"
+log_root = "../log_MLE"
+
+
+
+
+
 
 # Hyperparameters
 mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
