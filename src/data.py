@@ -6,6 +6,8 @@ import csv
 from tensorflow.core.example import example_pb2
 
 # <s> and </s> are used in the data files to segment the abstracts into sentences. They don't receive vocab ids.
+from dataset_woz3 import DatasetWoz3
+
 SENTENCE_START = '<s>'
 SENTENCE_END = '</s>'
 
@@ -73,22 +75,59 @@ class Vocab(object):
 def example_generator(data_path, single_pass):
   while True:
     filelist = glob.glob(data_path) # get the list of datafiles
-    assert filelist, ('Error: Empty filelist at %s' % data_path) # check filelist isn't empty
+
+    print("filepath")
+    print(data_path)
+    # train_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/train_*")
+    # eval_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/val_*")
+    # decode_data_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/chunked/test_*")
+    task_type = "train"
+    if(data_path.__contains__("val")):
+      task_type = "valid"
+    if(data_path.__contains__("test")):
+      task_type = "test"
+
+    print("Loading WoZ, loading " + task_type)
+    dataset = DatasetWoz3()
+    data = dataset.data
+    examples = (data[task_type])
+    if not single_pass:
+      random.shuffle(examples)
+
+    con = 0
+    temp_len = len(examples)
+    while True:
+      temp_example = examples[con]
+      con = con + 1
+      con = con % temp_len
+      yield temp_example
+
     if single_pass:
-      filelist = sorted(filelist)
-    else:
-      random.shuffle(filelist)
-    for f in filelist:
-      reader = open(f, 'rb')
-      while True:
-        len_bytes = reader.read(8)
-        if not len_bytes: break # finished reading this file
-        str_len = struct.unpack('q', len_bytes)[0]
-        example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
-        yield example_pb2.Example.FromString(example_str)
-    if single_pass:
-      #print("example_generator completed reading all datafiles. No more data.")
-      break
+        # print("example_generator completed reading all datafiles. No more data.")
+        break
+    #
+    # assert filelist, ('Error: Empty filelist at %s' % data_path) # check filelist isn't empty
+    # if single_pass:
+    #   filelist = sorted(filelist)
+    # else:
+    #   random.shuffle(filelist)
+    #
+    #
+    # for f in filelist:
+    #   reader = open(f, 'rb')
+    #   while True:
+    #     len_bytes = reader.read(8)
+    #     if not len_bytes: break # finished reading this file
+    #     str_len = struct.unpack('q', len_bytes)[0]
+    #     example_str = struct.unpack('%ds' % str_len, reader.read(str_len))[0]
+    #     #
+    #     # print("example")
+    #     # print(example_str)
+    #
+    #     yield example_pb2.Example.FromString(example_str)
+    # if single_pass:
+    #   #print("example_generator completed reading all datafiles. No more data.")
+    #   break
 
 
 def article2ids(article_words, vocab):

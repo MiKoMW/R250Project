@@ -97,6 +97,11 @@ class Train(object):
 
     def train_one_batch(self, batch, alpha, beta):
 
+        #
+        # print("BATCH")
+        # print(batch)
+
+
         enc_batch, enc_padding_mask, enc_lens, enc_batch_extend_vocab, extra_zeros, c_t_1, coverage = \
             get_input_from_batch(batch, use_cuda)
         dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \

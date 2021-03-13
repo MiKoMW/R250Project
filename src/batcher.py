@@ -13,6 +13,20 @@ random.seed(1234)
 
 class Example(object):
   def __init__(self, article, abstract_sentences, vocab):
+
+
+    # print("ARTICLE")
+    # print(article)
+    #
+    #
+    # print("abstract_sentences")
+    # print((abstract_sentences))
+    #
+    # assert (len(abstract_sentences) == 1)
+
+    # print("VOCAB")
+    # print(vocab)
+
     # Get ids of special tokens
     start_decoding = vocab.word2id(data.START_DECODING)
     stop_decoding = vocab.word2id(data.STOP_DECODING)
@@ -23,12 +37,12 @@ class Example(object):
       article_words = article_words[:config.max_enc_steps]
     self.enc_len = len(article_words) # store the length after truncation but before padding
     self.enc_input = [vocab.word2id(w) for w in article_words] # list of word ids; OOVs are represented by the id for UNK token
-    
+
     # Process the abstract
     abstract = ' '.join(abstract_sentences)
     abstract_words = abstract.split() # list of strings
     abs_ids = [vocab.word2id(w) for w in abstract_words] # list of word ids; OOVs are represented by the id for UNK token
-    
+
     # Get the decoder input sequence and target sequence
     self.dec_input, self.target = self.get_dec_inp_targ_seqs(abs_ids, config.max_dec_steps, start_decoding, stop_decoding)
     self.dec_len = len(self.dec_input)
@@ -49,7 +63,7 @@ class Example(object):
     self.original_article = article
     self.original_abstract = abstract
     self.original_abstract_sents = abstract_sentences
-    
+
 
   def get_dec_inp_targ_seqs(self, sequence, max_len, start_id, stop_id):
     inp = [start_id] + sequence[:]
@@ -79,10 +93,19 @@ class Example(object):
 
 
 
+# TODO: lOOK AT THIS!!!!!
 class Batch(object):
   def __init__(self, example_list, vocab, batch_size):
     self.batch_size = batch_size
     self.pad_id = vocab.word2id(data.PAD_TOKEN) # id of the PAD token used to pad sequences
+    #
+    # print("batchsize")
+    # print(batch_size)
+
+
+    # print("example_list")
+    # print(example_list) #  List of examples
+
     self.init_encoder_seq(example_list) # initialize the input to the encoder
     self.init_decoder_seq(example_list) # initialize the input and targets for the decoder
     self.store_orig_strings(example_list) # store the original strings
@@ -152,6 +175,8 @@ class Batcher(object):
   BATCH_QUEUE_MAX = 10 # max number of batches the batch_queue can hold
   def __init__(self, data_path, vocab, mode, batch_size, single_pass):
     self._data_path = data_path
+    print("DATA PATH")
+    print(data_path)
     self._vocab = vocab
     self._single_pass = single_pass
     self.mode = mode
@@ -204,11 +229,15 @@ class Batcher(object):
     return batch
 
 
+  # TODO: Look at this
   def fill_example_queue(self):
     input_gen = self.text_generator(data.example_generator(self._data_path, self._single_pass))
+
     while True:
       try:
         (article, abstract) = next(input_gen) # read the next example from file. article and abstract are both strings.
+        # print("article")
+        # print(article)
       except StopIteration: # if there are no more examples:
         if self._single_pass:
           self._finished_reading = True
@@ -221,6 +250,9 @@ class Batcher(object):
 #      abstract = str(abstract, encoding='utf8')
       abstract_sentences = [abstract]
       example = Example(article, abstract_sentences, self._vocab) # Process into an Example.
+
+      # print("article")
+      # print(article)
       self._example_queue.put(example) # place the Example in the example queue.
 
 
@@ -275,8 +307,25 @@ class Batcher(object):
     while True:
       try:
         e = next(example_generator) # e is a tf.Example
-        article_text = e.features.feature['article'].bytes_list.value[0].decode() # the article text was saved under the key 'article' in the data files
-        abstract_text = e.features.feature['abstract'].bytes_list.value[0].decode() # the abstract text was saved under the key 'abstract' in the data files
+
+        (dial_name, dial_turn, dial_utt, dial_acts) = e
+
+        #
+        # ('MUL2581', '9', {'delex': 'my pleasure ! enjoy your stay !', 'ori': 'My pleasure! Enjoy your stay!'},
+        #  {'general-bye': [['none', 'none', 'none']], 'general-welcome': [['none', 'none', 'none']]})
+        #
+        # print("e")
+        # print(dial_name)
+        # print(dial_turn)
+        # print(dial_utt)
+        # print(dial_acts)
+
+        article_text = dial_utt["delex"]
+        abstract_text = dial_utt["delex"]
+
+        #
+        # article_text = e.features.feature['article'].bytes_list.value[0].decode() # the article text was saved under the key 'article' in the data files
+        # abstract_text = e.features.feature['abstract'].bytes_list.value[0].decode() # the abstract text was saved under the key 'abstract' in the data files
       except ValueError:
 #        tf.logging.error('Failed to get article or abstract from example')
         continue
