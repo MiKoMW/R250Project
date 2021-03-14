@@ -371,6 +371,268 @@ class Train(object):
         return loss.item(), avg_reward.item()
 
 
+    def train_one_batch_mixer_first(self, batch, alpha, beta, mixer_fisrt_N_steps_use_XENT):
+
+        #
+        # print("BATCH")
+        # print(batch)
+
+
+        enc_batch, enc_padding_mask, enc_lens, enc_batch_extend_vocab, extra_zeros, c_t_1, coverage = \
+            get_input_from_batch(batch, use_cuda)
+        dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \
+            get_output_from_batch(batch, use_cuda)
+
+
+        # start from here.
+        self.optimizer.zero_grad()
+
+        encoder_outputs, encoder_feature, encoder_hidden = self.model.encoder(enc_batch, enc_lens)
+
+        # print("encoder_outputs")
+        # print(encoder_outputs.siz)
+
+
+        s_t_1 = self.model.reduce_state(encoder_hidden)
+
+        nll_list= []
+
+        # sample_size 是啥？
+
+        gen_summary = torch.LongTensor(config.batch_size*[config.sample_size*[[2]]]) # B x S x 1
+
+        # print("gen_summary")
+        # print(gen_summary.size())
+        # print(gen_summary)
+
+
+        if use_cuda: gen_summary = gen_summary.cuda()
+        preds_y = gen_summary.squeeze(2) # B x S
+
+
+        # TODO: Print Gold Here!!!!
+        # print("preds_y")
+        # print(preds_y.size())
+        # print(preds_y)
+        # print(self.vocab.size())
+        # print("temp")
+        # from data import outputids2words
+        # temp = outputids2words(list(map(lambda x : x.item(), enc_batch[1])),self.vocab,None)
+        # print(" ".join(temp))
+        # # for item in dec_batch[1]:
+        # #     temp = self.vocab.id2word(item.item())
+        # #     from data import outputids2words(dec_batch[1])
+        # #     print(temp)
+
+        from data import outputids2words
+
+        # print("dec_batch")
+        # print(dec_batch[0])
+        # temp = outputids2words(list(map(lambda x : x.item(), dec_batch[0])),self.vocab,None)
+        # print(temp)
+        # print()
+        # print("target_batch")
+        # print(target_batch[0])
+        # temp = outputids2words(list(map(lambda x : x.item(), target_batch[0])),self.vocab,None)
+        # print(temp)
+        # print()
+
+        # print("START")
+        for di in range(mixer_fisrt_N_steps_use_XENT):
+
+            #min(config.max_dec_steps, dec_batch.size(1))
+
+            p1 = np.random.uniform()
+            alpha = 1.
+            beta = 1.
+
+            if p1 < alpha: # use ground truth word
+                y_t_1 = dec_batch[:, di]
+            else: # use decoded word
+                y_t_1 = preds_y[:, 0]
+
+            final_dist, s_t_1,  c_t_1, attn_dist, p_gen, next_coverage = self.model.decoder(y_t_1, s_t_1,
+                                                        encoder_outputs, encoder_feature, enc_padding_mask,
+                                                        c_t_1, extra_zeros, enc_batch_extend_vocab,
+                                                        coverage, di)
+
+            p2 = np.random.uniform()
+            if p2 < beta: # sample the ground truth word
+                target = target_batch[:, di]
+                sampled_batch = torch.stack(config.sample_size*[target], 1) # B x S
+            else: # randomly sample a word with given probabilities
+                sampled_batch = torch.multinomial(final_dist, config.sample_size, replacement=True) # B x S
+
+            probs = torch.gather(final_dist, 1, sampled_batch).squeeze()
+            step_nll = -torch.log(probs + config.eps)
+
+            nll_list.append(step_nll)
+
+            # Store the decoded words in preds_y
+            preds_y = gen_preds(sampled_batch, use_cuda)
+            # Add the decoded words into gen_summary (mixed with ground truth and decoded words)
+            gen_summary = torch.cat((gen_summary, preds_y.unsqueeze(2)), 2) # B x S x L
+
+        # compute the REINFORCE score
+        nll = torch.sum(torch.stack(nll_list, 2), 2)  # B x S
+        all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, "MLE", use_cuda) # B x S, 1
+        batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
+        loss_1 = torch.mean(batch_loss)
+        loss_2 = 0
+
+        do_mixer = False
+        nll_list= []
+        # print("START")
+        for di in range(mixer_fisrt_N_steps_use_XENT, min(config.max_dec_steps, dec_batch.size(1))):
+
+            do_mixer = True
+
+            p1 = np.random.uniform()
+            alpha = alpha
+            beta = beta
+
+            if p1 < alpha:  # use ground truth word
+                y_t_1 = dec_batch[:, di]
+            else:  # use decoded word
+                y_t_1 = preds_y[:, 0]
+
+            final_dist, s_t_1, c_t_1, attn_dist, p_gen, next_coverage = self.model.decoder(y_t_1, s_t_1,
+                                                                                           encoder_outputs,
+                                                                                           encoder_feature,
+                                                                                           enc_padding_mask,
+                                                                                           c_t_1, extra_zeros,
+                                                                                           enc_batch_extend_vocab,
+                                                                                           coverage, di)
+            p2 = np.random.uniform()
+            if p2 < beta:  # sample the ground truth word
+                target = target_batch[:, di]
+                sampled_batch = torch.stack(config.sample_size * [target], 1)  # B x S
+            else:  # randomly sample a word with given probabilities
+                sampled_batch = torch.multinomial(final_dist, config.sample_size, replacement=True)  # B x S
+
+            probs = torch.gather(final_dist, 1, sampled_batch).squeeze()
+            step_nll = -torch.log(probs + config.eps)
+
+            nll_list.append(step_nll)
+
+            # Store the decoded words in preds_y
+            preds_y = gen_preds(sampled_batch, use_cuda)
+            # Add the decoded words into gen_summary (mixed with ground truth and decoded words)
+            gen_summary = torch.cat((gen_summary, preds_y.unsqueeze(2)), 2)  # B x S x L
+        if(do_mixer):
+            nll = torch.sum(torch.stack(nll_list, 2), 2)  # B x S
+            all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, config.mode, use_cuda)  # B x S, 1
+            batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
+            loss_2 = torch.mean(batch_loss)
+        loss = loss_1 + loss_2
+
+        loss.backward()
+        self.norm = clip_grad_norm_(self.model.encoder.parameters(), config.max_grad_norm)
+        clip_grad_norm_(self.model.decoder.parameters(), config.max_grad_norm)
+        clip_grad_norm_(self.model.reduce_state.parameters(), config.max_grad_norm)
+
+        self.optimizer.step()
+
+
+
+        return loss.item(), avg_reward.item()
+
+
+    # def trainIters_mixer(self, n_iters, model_file_path=None):
+    #     iter, running_avg_loss = self.setup_train(model_file_path)
+    #     min_val_loss = np.inf
+    #
+    #     alpha = config.alpha
+    #     beta = config.beta
+    #     k1 = config.k1
+    #     k2 = config.k2
+    #     delay = 0
+    #     earlyStopping_counter = 0
+    #
+    #     isMixer = config.isMixer
+    #     mixer_T = config.mixer_T
+    #     mixer_delta = config.mixer_delta
+    #     mixer_N_XENT_step = config.mixer_N_XENT_step
+    #     mixer_N_XENTRL_step = config.mixer_N_XENTRL_step
+    #
+    #     while iter < n_iters:
+    #         if config.mode == 'RL':
+    #             alpha = 0.
+    #             beta = 0.
+    #         elif config.mode == 'GTI':
+    #             alpha = 1.
+    #             beta = 0.
+    #         elif config.mode == 'SO':
+    #             alpha = 1.
+    #             beta = k2/(k2+np.exp((iter-delay)/k2))
+    #         elif config.mode == 'SIO':
+    #             alpha *= k1
+    #             if alpha < 0.01:
+    #                 beta = k2/(k2+np.exp((iter-delay)/k2))
+    #             else:
+    #                 beta = 1.
+    #                 delay += 1
+    #         elif config.mode == 'DAGGER':
+    #             alpha *= k1
+    #             beta = 1.
+    #         elif config.mode == 'DAGGER*':
+    #             alpha = config.alpha
+    #             beta = 1.
+    #         # elif config.mode == "MIXER":
+    #         #     alpha = 1.
+    #         #     beta = 1.
+    #         #     isMixer = True
+    #         else:
+    #             alpha = 1.
+    #             beta = 1.
+    #
+    #         batch = self.batcher.next_batch()
+    #
+    #         if(isMixer):
+    #             # More mixer code
+    #             if iter <= mixer_N_XENT_step:
+    #                 mixer_fisrt_N_steps_use_XENT = mixer_T
+    #             else:
+    #                 temp_over_step = iter - mixer_N_XENT_step
+    #                 temp_done_XENTR_turn = int(temp_over_step / mixer_N_XENTRL_step)
+    #                 mixer_fisrt_N_steps_use_XENT = mixer_T - (temp_done_XENTR_turn * mixer_delta) - mixer_delta
+    #                 if (mixer_fisrt_N_steps_use_XENT < 0):
+    #                     mixer_fisrt_N_steps_use_XENT = 0
+    #             loss, avg_reward = self.train_one_batch_mixer_mle(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+    #
+    #         else:
+    #             loss, avg_reward = self.train_one_batch(batch, alpha, beta)
+    #
+    #         running_avg_loss = calc_running_avg_loss(loss, running_avg_loss, self.summary_writer, iter)
+    #         iter += 1
+    #
+    #         if iter % config.print_interval == 0:
+    #             print('steps %d, current_loss: %f, avg_reward: %f' % (iter, loss, avg_reward))
+    #
+    #         if iter % config.save_model_iter == 0:
+    #             model_file_path = self.save_model(running_avg_loss, iter, mode='train')
+    #             evl_model = Evaluate(model_file_path)
+    #             val_avg_loss = evl_model.run_eval()
+    #             if val_avg_loss < min_val_loss:
+    #                 min_val_loss = val_avg_loss
+    #                 best_model_file_path = self.save_model(running_avg_loss, iter, mode='eval')
+    #                 print('Save best model at %s' % best_model_file_path)
+    #                 earlyStopping_counter = 0
+    #             else:
+    #                 if(iter >= config.min_earlyStopping):
+    #                     earlyStopping_counter+=1
+    #             print('steps %d, train_loss: %f, val_loss: %f' % (iter, loss, val_avg_loss))
+    #             # write val_loss into tensorboard
+    #             loss_sum = tf.compat.v1.Summary()
+    #             loss_sum.value.add(tag='val_avg_loss', simple_value=val_avg_loss)
+    #             self.summary_writer.add_summary(loss_sum, global_step=iter)
+    #             self.summary_writer.flush()
+    #
+    #             if(earlyStopping_counter > 2):
+    #                 print("EARLY STOP at " + (str(iter)))
+    #                 break
+
+
 
 
     def trainIters(self, n_iters, model_file_path=None):
@@ -434,7 +696,9 @@ class Train(object):
                     mixer_fisrt_N_steps_use_XENT = mixer_T - (temp_done_XENTR_turn * mixer_delta) - mixer_delta
                     if (mixer_fisrt_N_steps_use_XENT < 0):
                         mixer_fisrt_N_steps_use_XENT = 0
-                loss, avg_reward = self.train_one_batch_mixer(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+                # loss, avg_reward = self.train_one_batch_mixer(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+                loss, avg_reward = self.train_one_batch_mixer_first(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+
             else:
                 loss, avg_reward = self.train_one_batch(batch, alpha, beta)
 
@@ -466,6 +730,10 @@ class Train(object):
                 if(earlyStopping_counter > 2):
                     print("EARLY STOP at " + (str(iter)))
                     break
+
+
+
+
 
 
 if __name__ == '__main__':

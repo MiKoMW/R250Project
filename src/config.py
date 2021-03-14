@@ -5,16 +5,16 @@ import os
 
 
 # Change to DSTC9 dataset
-isDSTC = True
+isDSTC = False
 
 
 # Parameter for the mixer
 isMixer = False
 mixer_delta = 1
 mixer_T =  40
-mixer_N_XENT_step = 4000
-mixer_N_XENTRL_step = 2000
-not_normalise_reward = False
+mixer_N_XENT_step = 1000
+mixer_N_XENTRL_step = 1000
+not_normalise_reward = True
 
 
 root_dir = os.path.expanduser("~")
@@ -50,7 +50,7 @@ log_root = "../mixer_dagger"
 
 
 # Hyperparameters
-mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999

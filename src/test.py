@@ -28,7 +28,10 @@ if __name__ == '__main__':
     # print(len(examples))
     # print(examples[1])
 
-    dataset = DatasetDSTC9()
-    temp = (dataset.data["train"])
-    print(temp)
-    print(len(temp))
+    # dataset = DatasetDSTC9()
+    # temp = (dataset.data["train"])
+    # print(temp)
+    # print(len(temp))
+
+    for item in (range(10)):
+        print(item)
