@@ -24,7 +24,7 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 # log_root = "../log_MLE"
 # log_root = "../log_dagger+"
-log_root = "../mixer"
+log_root = "../mixer_dagger"
 
 
 
@@ -32,7 +32,7 @@ log_root = "../mixer"
 
 
 # Hyperparameters
-mode = "MIXER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -60,7 +60,7 @@ eps = 1e-12
 use_gpu = True
 
 # Parameter for the mixer
-
+isMixer = True
 mixer_delta = 2
 mixer_T =  max_dec_steps
 mixer_N_XENT_step = 4000

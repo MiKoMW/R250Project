@@ -324,8 +324,8 @@ class Train(object):
                 alpha = 1.
                 beta = 1.
             else:
-                alpha = 0.
-                beta = 0.
+                alpha = alpha
+                beta = beta
 
             # print("alphdabeta")
             # print(alpha)
@@ -399,7 +399,7 @@ class Train(object):
 
 
         # TODO: Setup the mixer curriculum learning scheduling
-        isMixer = False
+        isMixer = config.isMixer
         mixer_T = config.mixer_T
         mixer_delta = config.mixer_delta
         mixer_N_XENT_step = config.mixer_N_XENT_step
@@ -428,17 +428,13 @@ class Train(object):
             elif config.mode == 'DAGGER*':
                 alpha = config.alpha
                 beta = 1.
-            elif config.mode == "MIXER":
-                alpha = 1.
-                beta = 1.
-                isMixer = True
+            # elif config.mode == "MIXER":
+            #     alpha = 1.
+            #     beta = 1.
+            #     isMixer = True
             else:
                 alpha = 1.
                 beta = 1.
-
-
-
-
 
             batch = self.batcher.next_batch()
 
