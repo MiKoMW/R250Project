@@ -23,7 +23,7 @@ decode_data_path = "../data/twitter_url/chunked/test_*"
 vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 log_root = "../log_MLE"
-log_root = "../log_rl"
+log_root = "../log_dagger+"
 
 
 
