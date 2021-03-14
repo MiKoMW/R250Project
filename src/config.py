@@ -31,7 +31,7 @@ log_root = "../log_rl"
 
 
 # Hyperparameters
-mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
+mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
