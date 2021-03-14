@@ -88,6 +88,8 @@ def example_generator(data_path, single_pass):
     if(data_path.__contains__("test")):
       task_type = "test"
 
+
+    # CHANGE DATASET HERE!!!!
     print("Loading WoZ, loading " + task_type)
     dataset = DatasetWoz3()
     data = dataset.data

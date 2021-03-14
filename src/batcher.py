@@ -332,7 +332,6 @@ class Batcher(object):
 
         # surface forms
         abstract_text = dial_utt["delex"]
-
         # ACT
         article_text = act_str
 
