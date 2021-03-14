@@ -22,7 +22,8 @@ decode_data_path = "../data/twitter_url/chunked/test_*"
 # vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
 vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-log_root = "../log_MLE"
+# log_root = "../log_MLE"
+# log_root = "../log_dagger+"
 log_root = "../mixer"
 
 
@@ -62,5 +63,5 @@ use_gpu = True
 
 mixer_delta = 2
 mixer_T =  max_dec_steps
-mixer_N_XENT_step = 2000
-mixer_N_XENTRL_step = 1000
+mixer_N_XENT_step = 4000
+mixer_N_XENTRL_step = 2000
