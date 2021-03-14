@@ -1,3 +1,9 @@
+1000 example in 66 sec
+2000 example in 63 sec
+3000 example in 64 sec
+Average BLEU score: 0.07780305624197366
+
+MIXER + RL
 import os
 
 root_dir = os.path.expanduser("~")
@@ -24,7 +30,7 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 # log_root = "../log_MLE"
 # log_root = "../log_dagger+"
-log_root = "../mixer_dagger"
+log_root = "../mixer"
 
 
 
@@ -32,7 +38,7 @@ log_root = "../mixer_dagger"
 
 
 # Hyperparameters
-mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "MIXER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -60,8 +66,8 @@ eps = 1e-12
 use_gpu = True
 
 # Parameter for the mixer
-isMixer = False
-mixer_delta = 1
+
+mixer_delta = 2
 mixer_T =  max_dec_steps
 mixer_N_XENT_step = 4000
 mixer_N_XENTRL_step = 2000
