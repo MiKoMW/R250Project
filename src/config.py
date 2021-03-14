@@ -23,7 +23,7 @@ decode_data_path = "../data/twitter_url/chunked/test_*"
 vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 log_root = "../log_MLE"
-log_root = "../log_dagger+"
+log_root = "../mixer"
 
 
 
@@ -31,7 +31,7 @@ log_root = "../log_dagger+"
 
 
 # Hyperparameters
-mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*
+mode = "MIXER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -46,7 +46,7 @@ beam_size= 8
 min_dec_steps= 5
 vocab_size= 5000
 
-max_iterations = 500000
+max_iterations = 20000
 lr = 1e-5
 pointer_gen = False
 is_coverage = False
@@ -57,3 +57,10 @@ rand_unif_init_mag = 0.02
 trunc_norm_init_std = 1e-4
 eps = 1e-12
 use_gpu = True
+
+# Parameter for the mixer
+
+mixer_delta = 2
+mixer_T =  max_dec_steps
+mixer_N_XENT_step = 2000
+mixer_N_XENTRL_step = 1000
