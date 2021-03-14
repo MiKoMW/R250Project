@@ -6,6 +6,8 @@ import csv
 from tensorflow.core.example import example_pb2
 
 # <s> and </s> are used in the data files to segment the abstracts into sentences. They don't receive vocab ids.
+import config
+from DSTC9_dataset import DatasetDSTC9
 from dataset_woz3 import DatasetWoz3
 
 SENTENCE_START = '<s>'
@@ -18,6 +20,7 @@ STOP_DECODING = '[STOP]' # This has a vocab id, which is used at the end of untr
 # Note: none of <s>, </s>, [PAD], [UNK], [START], [STOP] should appear in the vocab file.
 
 EQ_FOR_DIALACT = '='
+SEQ_TOKEN = '[SEQ]'
 
 class Vocab(object):
   def __init__(self, vocab_file, max_size):
@@ -26,7 +29,7 @@ class Vocab(object):
     self._count = 0 # keeps track of total number of words in the Vocab
 
     # [UNK], [PAD], [START] and [STOP] get the ids 0,1,2,3.
-    for w in [UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING, EQ_FOR_DIALACT]:
+    for w in [UNKNOWN_TOKEN, PAD_TOKEN, START_DECODING, STOP_DECODING, EQ_FOR_DIALACT, SEQ_TOKEN]:
       self._word_to_id[w] = self._count
       self._id_to_word[self._count] = w
       self._count += 1
@@ -91,7 +94,13 @@ def example_generator(data_path, single_pass):
 
     # CHANGE DATASET HERE!!!!
     print("Loading WoZ, loading " + task_type)
+
+
     dataset = DatasetWoz3()
+    if config.isDSTC:
+      print("Opps, not woz, but dstc9, loading " + task_type)
+      dataset = DatasetDSTC9()
+
     data = dataset.data
     examples = (data[task_type])
     if not single_pass:

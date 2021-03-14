@@ -309,7 +309,6 @@ class Batcher(object):
       try:
         e = next(example_generator) # e is a tf.Example
 
-        (dial_name, dial_turn, dial_utt, dial_acts) = e
 
         #
         # ('MUL2581', '9', {'delex': 'my pleasure ! enjoy your stay !', 'ori': 'My pleasure! Enjoy your stay!'},
@@ -321,19 +320,25 @@ class Batcher(object):
         # print(dial_utt)
         # print(dial_acts)
         #
-        act_str = ""
-        for key in dial_acts.keys():
-
+        if config.isDSTC:
+          # to encoder
+          input = e["question"] + " [SEQ] " + e["body"]
+          article_text = input
+          output = e["answer"]
+          abstract_text = output
+        else:
+          (dial_name, dial_turn, dial_utt, dial_acts) = e
+          act_str = ""
+          for key in dial_acts.keys():
             act_str += key
             act_str += " ( "
-            temp = list(map(lambda x : x[0] + " = " + x[2], dial_acts[key]))
+            temp = list(map(lambda x: x[0] + " = " + x[2], dial_acts[key]))
             temp = " , ".join(temp)
-            act_str = act_str + temp +  " ) "
-
-        # surface forms
-        abstract_text = dial_utt["delex"]
-        # ACT
-        article_text = act_str
+            act_str = act_str + temp + " ) "
+          # surface forms
+          abstract_text = dial_utt["delex"]
+          # ACT
+          article_text = act_str
 
         #
         # article_text = e.features.feature['article'].bytes_list.value[0].decode() # the article text was saved under the key 'article' in the data files

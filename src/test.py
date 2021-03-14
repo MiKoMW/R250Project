@@ -1,3 +1,4 @@
+from DSTC9_dataset import DatasetDSTC9
 from batcher import Example
 from data import Vocab
 from dataset_woz3 import DatasetWoz3
@@ -27,5 +28,7 @@ if __name__ == '__main__':
     # print(len(examples))
     # print(examples[1])
 
-    a = int(34 / 21)
-    print(a)
+    dataset = DatasetDSTC9()
+    temp = (dataset.data["train"])
+    print(temp)
+    print(len(temp))
