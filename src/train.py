@@ -245,22 +245,8 @@ class Train(object):
         dec_batch, dec_padding_mask, max_dec_len, dec_lens_var, target_batch = \
             get_output_from_batch(batch, use_cuda)
 
-        #
-        # print("ENC_BATCH")
-        # print(len(enc_batch))
-        # print(len(enc_batch[0]))
-        # print((enc_batch[0]))
-        #
-        # print("enc_padding_mask")
-        # print(enc_padding_mask)
-        # print(len(enc_padding_mask))
-        # print(len(enc_padding_mask[0]))
 
-        # print("enc_lens")
-        # print(enc_lens)
-        # print("enc_batch_extend_vocab")
-        # print(enc_batch_extend_vocab)
-
+        # start from here.
         self.optimizer.zero_grad()
 
         encoder_outputs, encoder_feature, encoder_hidden = self.model.encoder(enc_batch, enc_lens)
@@ -396,7 +382,7 @@ class Train(object):
         k1 = config.k1
         k2 = config.k2
         delay = 0
-
+        earlyStopping_counter = 0
 
         # TODO: Setup the mixer curriculum learning scheduling
         isMixer = config.isMixer
@@ -466,12 +452,20 @@ class Train(object):
                     min_val_loss = val_avg_loss
                     best_model_file_path = self.save_model(running_avg_loss, iter, mode='eval')
                     print('Save best model at %s' % best_model_file_path)
+                    earlyStopping_counter = 0
+                else:
+                    if(iter >= config.min_earlyStopping):
+                        earlyStopping_counter+=1
                 print('steps %d, train_loss: %f, val_loss: %f' % (iter, loss, val_avg_loss))
                 # write val_loss into tensorboard
                 loss_sum = tf.compat.v1.Summary()
                 loss_sum.value.add(tag='val_avg_loss', simple_value=val_avg_loss)
                 self.summary_writer.add_summary(loss_sum, global_step=iter)
                 self.summary_writer.flush()
+
+                if(earlyStopping_counter > 2):
+                    print("EARLY STOP at " + (str(iter)))
+                    break
 
 
 if __name__ == '__main__':

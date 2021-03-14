@@ -117,6 +117,8 @@ def compute_reward(batch, decode_batch, vocab, mode, use_cuda):
         batch_avg_reward = batch_avg_reward * ones   # B x S
         if torch.equal(all_rewards, batch_avg_reward):
             all_rewards = all_rewards
+        elif config.not_normalise_reward:
+            all_rewards = all_rewards
         else:
             all_rewards = all_rewards - batch_avg_reward
         

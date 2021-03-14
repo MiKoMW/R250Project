@@ -1,5 +1,22 @@
 import os
 
+
+
+
+
+# Change to DSTC9 dataset
+isDSTC = True
+
+
+# Parameter for the mixer
+isMixer = False
+mixer_delta = 1
+mixer_T =  40
+mixer_N_XENT_step = 4000
+mixer_N_XENTRL_step = 2000
+not_normalise_reward = False
+
+
 root_dir = os.path.expanduser("~")
 root_dir = os.path.join(root_dir, "Desktop")
 
@@ -19,8 +36,9 @@ save_model_iter = 1000
 train_data_path = "../data/twitter_url/chunked/train_*"
 eval_data_path =  "../data/twitter_url/chunked/val_*"
 decode_data_path = "../data/twitter_url/chunked/test_*"
-# vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
-vocab_path = "../resource/woz3/woz_vocab.txt"
+vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
+if isDSTC:
+    vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 # log_root = "../log_MLE"
 # log_root = "../log_dagger+"
@@ -59,13 +77,5 @@ trunc_norm_init_std = 1e-4
 eps = 1e-12
 use_gpu = True
 
-# Parameter for the mixer
-isMixer = False
-mixer_delta = 1
-mixer_T =  max_dec_steps
-mixer_N_XENT_step = 4000
-mixer_N_XENTRL_step = 2000
 
-
-# Change to DSTC9 dataset
-isDSTC = True
+min_earlyStopping = 10000
