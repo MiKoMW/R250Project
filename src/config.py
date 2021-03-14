@@ -36,7 +36,7 @@ save_model_iter = 1000
 train_data_path = "../data/twitter_url/chunked/train_*"
 eval_data_path =  "../data/twitter_url/chunked/val_*"
 decode_data_path = "../data/twitter_url/chunked/test_*"
-vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
+vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
