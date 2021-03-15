@@ -135,7 +135,7 @@ class Train(object):
 
         nll_list= []
 
-        # sample_size 是啥？
+        # sample_size
 
         gen_summary = torch.LongTensor(config.batch_size*[config.sample_size*[[2]]]) # B x S x 1
 
