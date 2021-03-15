@@ -437,9 +437,13 @@ class Train(object):
         # print(temp)
         # print()
 
+        do_XENT = False
+        consider_Done = True
+        loss_1 = 0
         # print("START")
         for di in range(mixer_fisrt_N_steps_use_XENT):
-
+            do_XENT = True
+            consider_Done = False
             #min(config.max_dec_steps, dec_batch.size(1))
 
             p1 = np.random.uniform()
@@ -472,12 +476,13 @@ class Train(object):
             preds_y = gen_preds(sampled_batch, use_cuda)
             # Add the decoded words into gen_summary (mixed with ground truth and decoded words)
             gen_summary = torch.cat((gen_summary, preds_y.unsqueeze(2)), 2) # B x S x L
+        if do_XENT:
+            # compute the REINFORCE score
+            nll = torch.sum(torch.stack(nll_list, 2), 2)  # B x S
+            all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, "MLE", use_cuda)  # B x S, 1
+            batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
+            loss_1 = torch.mean(batch_loss)
 
-        # compute the REINFORCE score
-        nll = torch.sum(torch.stack(nll_list, 2), 2)  # B x S
-        all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, "MLE", use_cuda) # B x S, 1
-        batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
-        loss_1 = torch.mean(batch_loss)
         loss_2 = 0
 
         do_mixer = False

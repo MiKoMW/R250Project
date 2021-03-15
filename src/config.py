@@ -12,8 +12,8 @@ isDSTC = False
 isMixer = True
 mixer_delta = 2
 mixer_T =  40
-mixer_N_XENT_step = 6000
-mixer_N_XENTRL_step = 500
+mixer_N_XENT_step = 100
+mixer_N_XENTRL_step = 200
 not_normalise_reward = False
 
 
