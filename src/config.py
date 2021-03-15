@@ -24,7 +24,7 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
 
-log_root = "../log_mixer_dagger_fine"
+log_root = "../dstc_dagger_pre"
 
 # Hyperparameters
 mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
