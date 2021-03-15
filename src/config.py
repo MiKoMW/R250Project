@@ -24,10 +24,10 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
 
-log_root = "../log_dagger_fine"
+log_root = "../log_rl_fine"
 
 # Hyperparameters
-mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
