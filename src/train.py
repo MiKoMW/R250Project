@@ -441,7 +441,7 @@ class Train(object):
         consider_Done = True
         loss_1 = 0
         # print("START")
-        for di in range(mixer_fisrt_N_steps_use_XENT):
+        for di in range(min(mixer_fisrt_N_steps_use_XENT ,min(config.max_dec_steps, dec_batch.size(1)))):
             do_XENT = True
             consider_Done = False
             #min(config.max_dec_steps, dec_batch.size(1))
