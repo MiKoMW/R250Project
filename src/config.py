@@ -10,7 +10,7 @@ isDSTC = False
 
 # Parameter for the mixer
 isMixer = True
-mixer_delta = 4
+mixer_delta = 2
 mixer_T =  40
 mixer_N_XENT_step = 6000
 mixer_N_XENTRL_step = 500
@@ -42,7 +42,7 @@ if isDSTC:
 # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
 # log_root = "../log_MLE"
 # log_root = "../log_dagger+"
-log_root = "../mixer_dagger"
+log_root = "../mixer_rl"
 
 
 
