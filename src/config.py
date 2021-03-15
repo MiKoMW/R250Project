@@ -9,12 +9,12 @@ isDSTC = False
 
 
 # Parameter for the mixer
-isMixer = False
-mixer_delta = 1
+isMixer = True
+mixer_delta = 4
 mixer_T =  40
-mixer_N_XENT_step = 1000
-mixer_N_XENTRL_step = 1000
-not_normalise_reward = True
+mixer_N_XENT_step = 6000
+mixer_N_XENTRL_step = 500
+not_normalise_reward = False
 
 
 root_dir = os.path.expanduser("~")
@@ -50,7 +50,7 @@ log_root = "../mixer_dagger"
 
 
 # Hyperparameters
-mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
