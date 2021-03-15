@@ -34,14 +34,16 @@ pretrain mixer_RL
 xo :~/Desktop/mixerDagger_new/R250Project/src$ python decode.py ../mixer_rl/best_model/model_best_15000
 Average BLEU score: 0.0967636309591495
 
-
 pretrain mixer_Dagger
 xo :~/Desktop/mixerDagger/R250Project/src$ python decode.py ../mixer_rl/best_model/model_best_20000
 Average BLEU score: 0.1367916902034269
 
+
+
 MLE pretrain, + RL fintune
 Average BLEU score: 4.5168102313131205e-05
 doesn't work.
+
 
 MLE pretrain, + Dagger fintune
 ---30000
@@ -49,8 +51,8 @@ ssh -p 26168 root@hz.matpool.com
 Average BLEU score: 0.2686148770537568
 
 MLE pretrain, + mixer RL fintune
-Average BLEU score: 0.3153887562386047
 
+Average BLEU score: 0.3153887562386047
 
 MLE pretrain, + mixer Dagger fintune
 running cloud
@@ -62,6 +64,20 @@ mixer_T =  40
 mixer_N_XENT_step = 1000
 mixer_N_XENTRL_step = 200
 not_normalise_reward = False
+
+
+1000 example in 90 sec
+2000 example in 88 sec
+3000 example in 91 sec
+Average BLEU score: 0.2681886504962757
+
+running https://hz.matpool.com:29570/lab/workspaces/auto-T with old code.
+
+
+
+
+
+
 
 
 
