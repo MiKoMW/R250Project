@@ -16,18 +16,11 @@ MLE baseline LSTM no pointer GEN
 Average BLEU score: 0.30761174281728504
 juchuyun woz_mle_base
 
-
-
 pretrain dagger_pretrain
 xo running
 
-1000 example in 115 sec
-2000 example in 115 sec
-3000 example in 115 sec
-Average BLEU score: 0.0967636309591495
-
-
-
+RL Pretrain with pointer gen
+running on cloud 28808
 
 pretrain mixer_RL
 xo :~/Desktop/mixerDagger_new/R250Project/src$ python decode.py ../mixer_rl/best_model/model_best_15000
@@ -55,8 +48,11 @@ MLE pretrain, + mixer RL fintune
 Average BLEU score: 0.3153887562386047
 
 
-RL Pretrain with pointer gen
-running on cloud 28808
+MLE pretrain, + mixer Dagger fintune
+ssh -p 26168 root@hz.matpool.com
+
+
+
 
 
 Results for DSTC9

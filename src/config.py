@@ -24,7 +24,7 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
 
-log_root = "../log_rl"
+log_root = "../log_dagger_fine"
 
 # Hyperparameters
 mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
@@ -42,7 +42,7 @@ beam_size= 8
 min_dec_steps= 5
 vocab_size= 5000
 
-max_iterations = 20000
+max_iterations = 30000
 lr = 1e-5
 pointer_gen = True
 is_coverage = False
