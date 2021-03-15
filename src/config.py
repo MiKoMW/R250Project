@@ -6,7 +6,7 @@ isDSTC = True
 # Parameter for the mixer
 isMixer = False
 mixer_delta = 1
-mixer_T =  40
+mixer_T = 40
 mixer_N_XENT_step = 1000
 mixer_N_XENTRL_step = 200
 not_normalise_reward = False
@@ -22,12 +22,12 @@ eval_data_path =  "../data/twitter_url/chunked/val_*"
 decode_data_path = "../data/twitter_url/chunked/test_*"
 vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
-    vocab_path = "../resource/woz3/woz_vocab.txt"
+    vocab_path = "../dstc9/dstc9_vocab.txt"
 
-log_root = "../dstc_dagger_pre"
+log_root = "../dstc_mle_baseline"
 
 # Hyperparameters
-mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
