@@ -4,10 +4,10 @@ import os
 isDSTC = False
 
 # Parameter for the mixer
-isMixer = False
-mixer_delta = 2
+isMixer = True
+mixer_delta = 1
 mixer_T =  40
-mixer_N_XENT_step = 100
+mixer_N_XENT_step = 1000
 mixer_N_XENTRL_step = 200
 not_normalise_reward = False
 
@@ -24,10 +24,10 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
 
-log_root = "../log_rl_fine"
+log_root = "../log_mixer_dagger_fine"
 
 # Hyperparameters
-mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999

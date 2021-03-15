@@ -40,20 +40,17 @@ xo :~/Desktop/mixerDagger/R250Project/src$ python decode.py ../mixer_rl/best_mod
 Average BLEU score: 0.1367916902034269
 
 
-MLE pretrain, + mixer RL fintune ?
-1000 example in 99 sec
-2000 example in 97 sec
-3000 example in 99 sec
-Average BLEU score: 0.3153887562386047
-
+MLE pretrain, + RL fintune
+running on cloud https://hz.matpool.com:27946/lab
 
 MLE pretrain, + Dagger fintune
 ssh -p 26168 root@hz.matpool.com
 
-MLE pretrain, + RL finetune fintune
-ssh -p 28063 root@hz.matpool.com
-
-
+MLE pretrain, + mixer RL fintune
+1000 example in 99 sec
+2000 example in 97 sec
+3000 example in 99 sec
+Average BLEU score: 0.3153887562386047
 
 
 Results for DSTC9
