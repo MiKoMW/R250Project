@@ -44,7 +44,7 @@ vocab_size= 5000
 
 max_iterations = 20000
 lr = 1e-5
-pointer_gen = False
+pointer_gen = True
 is_coverage = False
 lr_coverage = 0.15
 cov_loss_wt = 1.0
