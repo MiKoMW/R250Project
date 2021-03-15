@@ -41,16 +41,43 @@ Average BLEU score: 0.1367916902034269
 
 
 MLE pretrain, + RL fintune
-running on cloud https://hz.matpool.com:27946/lab
+
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+1000 example in 198 sec
+2000 example in 201 sec
+3000 example in 202 sec
+Average BLEU score: 4.5168102313131205e-05
+doesn't work.
 
 MLE pretrain, + Dagger fintune
 ssh -p 26168 root@hz.matpool.com
+
+
+
+
 
 MLE pretrain, + mixer RL fintune
 1000 example in 99 sec
 2000 example in 97 sec
 3000 example in 99 sec
 Average BLEU score: 0.3153887562386047
+
+
+MLE pretrain, + mixer Dagger fintune
+running cloud
+ssh -p 28063 root@hz.matpool.com
+# Parameter for the mixer
+isMixer = True
+mixer_delta = 1
+mixer_T =  40
+mixer_N_XENT_step = 1000
+mixer_N_XENTRL_step = 200
+not_normalise_reward = False
+
+
+
+
 
 
 Results for DSTC9
@@ -61,4 +88,5 @@ LSTM DSTC 9 pointer gen MLE
 Average BLEU score: 0.21046169875827023
 
 juchiyun dstc_MLE
+
 

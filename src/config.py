@@ -1,10 +1,10 @@
 import os
 
 # Change to DSTC9 dataset
-isDSTC = False
+isDSTC = True
 
 # Parameter for the mixer
-isMixer = True
+isMixer = False
 mixer_delta = 1
 mixer_T =  40
 mixer_N_XENT_step = 1000
