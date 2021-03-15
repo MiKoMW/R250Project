@@ -68,11 +68,15 @@ not_normalise_reward = False
 Results for DSTC9
 
 LSTM DSTC 9 pointer gen MLE
-
+rerunning on https://hz.matpool.com:26804/lab
 1000 example in 104 sec
 Average BLEU score: 0.21046169875827023
 
 juchiyun dstc_MLE
+
+
+
+
 
 LSTM DSTC 9 pointer gen RL
 runing on xo

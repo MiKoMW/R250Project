@@ -27,7 +27,7 @@ if isDSTC:
 log_root = "../dstc_mle_baseline"
 
 # Hyperparameters
-mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
