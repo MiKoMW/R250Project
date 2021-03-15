@@ -732,7 +732,7 @@ class Train(object):
                 self.summary_writer.add_summary(loss_sum, global_step=iter)
                 self.summary_writer.flush()
 
-                if(earlyStopping_counter > 2):
+                if(earlyStopping_counter > 1):
                     print("EARLY STOP at " + (str(iter)))
                     break
 

@@ -1,14 +1,14 @@
 import os
 
 # Change to DSTC9 dataset
-isDSTC = True
+isDSTC = False
 
 # Parameter for the mixer
-isMixer = False
-mixer_delta = 1
+isMixer = True
+mixer_delta = 2
 mixer_T = 40
 mixer_N_XENT_step = 1000
-mixer_N_XENTRL_step = 200
+mixer_N_XENTRL_step = 1000
 not_normalise_reward = False
 
 root_dir = os.path.expanduser("~")
@@ -24,10 +24,10 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../dstc9/dstc9_vocab.txt"
 
-log_root = "../dstc_mle_baseline"
+log_root = "../woz_mixdagger_30k_fine"
 
 # Hyperparameters
-mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "Dagger"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -42,7 +42,7 @@ beam_size= 8
 min_dec_steps= 5
 vocab_size= 5000
 
-max_iterations = 20000
+max_iterations = 30000
 lr = 1e-5
 pointer_gen = True
 is_coverage = False

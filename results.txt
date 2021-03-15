@@ -16,6 +16,13 @@ MLE baseline LSTM no pointer GEN
 Average BLEU score: 0.30761174281728504
 juchuyun woz_mle_base
 
+1000 example in 71 sec
+2000 example in 70 sec
+3000 example in 72 sec
+Average BLEU score: 0.32301135165267864
+
+
+
 
 RL Pretrain with pointer gen
 on cloud
@@ -43,12 +50,23 @@ Average BLEU score: 0.1367916902034269
 MLE pretrain, + RL fintune
 Average BLEU score: 4.5168102313131205e-05
 doesn't work.
+rerun https://hz.matpool.com:29570/lab/workspaces/auto-T
+
+Average BLEU score: 0.2274416273586806
+
+Average BLEU score: 0.32615020496000785
 
 
 MLE pretrain, + Dagger fintune
 ---30000
 ssh -p 26168 root@hz.matpool.com
 Average BLEU score: 0.2686148770537568
+1000 example in 72 sec
+2000 example in 72 sec
+3000 example in 74 sec
+Average BLEU score: 0.31182387049828214
+
+
 
 MLE pretrain, + mixer RL fintune
 
@@ -65,7 +83,6 @@ mixer_N_XENT_step = 1000
 mixer_N_XENTRL_step = 200
 not_normalise_reward = False
 
-
 1000 example in 90 sec
 2000 example in 88 sec
 3000 example in 91 sec
@@ -73,8 +90,31 @@ Average BLEU score: 0.2681886504962757
 
 running https://hz.matpool.com:29570/lab/workspaces/auto-T with old code.
 
+1000 example in 72 sec
+2000 example in 68 sec
+3000 example in 68 sec
+Average BLEU score: 0.3153887562386047
 
 
+isMixer = True
+mixer_delta = 2
+mixer_T =  40
+mixer_N_XENT_step = 2000
+mixer_N_XENTRL_step = 1000
+not_normalise_reward = False
+
+  warnings.warn(_msg)
+1000 example in 88 sec
+2000 example in 86 sec
+3000 example in 88 sec
+Average BLEU score: 0.2684747271482392
+
+https://hz.matpool.com:28381/lab run new without pointer gen.
+oading WoZ, loading test
+1000 example in 71 sec
+2000 example in 68 sec
+3000 example in 73 sec
+Average BLEU score: 0.3178774660043566
 
 
 
@@ -90,19 +130,24 @@ Average BLEU score: 0.21046169875827023
 
 juchiyun dstc_MLE
 
-
-
-
-
 LSTM DSTC 9 pointer gen RL
 runing on xo
+2.13777e-15
+not work.
+
 
 LSTM DSTC 9 pointer gen Dagger
 https://hz.matpool.com:29095/lab
 
 LSTM DSTC 9 pointer gen mixer rl pretrain
 https://hz.matpool.com:28808/lab
-
+The hypothesis contains 0 counts of 2-gram overlaps.
+Therefore the BLEU score evaluates to 0, independently of
+how many N-gram overlaps of lower order it contains.
+Consider using lower n-gram order or use SmoothingFunction()
+  warnings.warn(_msg)
+1000 example in 182 sec
+Average BLEU score: 0.07105854631488437
 
 LSTM DSTC 9 pointer gen mixer dagger pretrain
 https://hz.matpool.com:26325/lab
