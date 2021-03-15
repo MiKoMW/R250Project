@@ -27,7 +27,7 @@ if isDSTC:
 log_root = "../dstc_dagger_pre"
 
 # Hyperparameters
-mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -42,7 +42,7 @@ beam_size= 8
 min_dec_steps= 5
 vocab_size= 5000
 
-max_iterations = 30000
+max_iterations = 20000
 lr = 1e-5
 pointer_gen = True
 is_coverage = False
