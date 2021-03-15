@@ -1,21 +1,15 @@
 import os
 
-
-
-
-
 # Change to DSTC9 dataset
 isDSTC = False
 
-
 # Parameter for the mixer
-isMixer = True
+isMixer = False
 mixer_delta = 2
 mixer_T =  40
 mixer_N_XENT_step = 100
 mixer_N_XENTRL_step = 200
 not_normalise_reward = False
-
 
 root_dir = os.path.expanduser("~")
 root_dir = os.path.join(root_dir, "Desktop")
@@ -23,31 +17,14 @@ root_dir = os.path.join(root_dir, "Desktop")
 print_interval = 100
 save_model_iter = 1000
 
-# train_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/train_*")
-# eval_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/val_*")
-# decode_data_path = os.path.join(root_dir, "R250Project/data/twitter_url/chunked/test_*")
-# # vocab_path = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/data/twitter_url/vocab")
-# vocab_path = os.path.join(root_dir, "R250Project/resource/woz3/woz_vocab.txt")
-# # log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-# log_root = os.path.join(root_dir, "R250Project/log_rl")
-# log_root = os.path.join(root_dir, "R250Project/log_twitter")
-# log_root = os.path.join(root_dir, "R250Project/log_MLE")
-
 train_data_path = "../data/twitter_url/chunked/train_*"
 eval_data_path =  "../data/twitter_url/chunked/val_*"
 decode_data_path = "../data/twitter_url/chunked/test_*"
 vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../resource/woz3/woz_vocab.txt"
-# log_root = os.path.join(root_dir, "Reinforce-Paraphrase-Generation/log_twitter")
-# log_root = "../log_MLE"
-# log_root = "../log_dagger+"
-log_root = "../mixer_rl"
 
-
-
-
-
+log_root = "../log_rl"
 
 # Hyperparameters
 mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
@@ -78,4 +55,4 @@ eps = 1e-12
 use_gpu = True
 
 
-min_earlyStopping = 10000
+min_earlyStopping = 8000

@@ -1,0 +1,42 @@
+Results for MultiWoZ 2.0 NLG
+
+
+
+MLE baseline LSTM no pointer GEN
+1000 example in 142 sec
+2000 example in 134 sec
+3000 example in 146 sec
+Average BLEU score: 0.30761174281728504
+juchuyun woz_mle_base
+
+
+
+MLE pretrain, + mixer RL fintune
+
+1000 example in 99 sec
+2000 example in 97 sec
+3000 example in 99 sec
+Average BLEU score: 0.3153887562386047
+
+
+
+SC-LSTM ........
+Calculating BLEU...
+Avg # feat: 622
+Avg # gen: 49.39
+
+Done BLEU-4, time:234.4
+BLEU 1-4: [0.6400023268232907]
+BLEU 1-4: [0.6400023268232907]
+
+
+
+Results for DSTC9
+
+LSTM DSTC 9 pointer gen MLE
+
+1000 example in 104 sec
+Average BLEU score: 0.21046169875827023
+
+juchiyun dstc_MLE
+

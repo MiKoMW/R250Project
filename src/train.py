@@ -371,7 +371,7 @@ class Train(object):
         return loss.item(), avg_reward.item()
 
 
-    def train_one_batch_mixer_first(self, batch, alpha, beta, mixer_fisrt_N_steps_use_XENT):
+    def train_one_batch_mixer_first(self, batch, alpha_input, beta_input, mixer_fisrt_N_steps_use_XENT):
 
         #
         # print("BATCH")
@@ -493,8 +493,8 @@ class Train(object):
             do_mixer = True
 
             p1 = np.random.uniform()
-            alpha = alpha
-            beta = beta
+            alpha = alpha_input
+            beta = beta_input
 
             if p1 < alpha:  # use ground truth word
                 y_t_1 = dec_batch[:, di]
