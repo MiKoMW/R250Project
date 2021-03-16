@@ -67,9 +67,12 @@ class Train(object):
             save_model_dir = best_model_dir
 
         if len(os.listdir(save_model_dir))>0:
-            shutil.rmtree(save_model_dir)
-            time.sleep(2)
-            os.mkdir(save_model_dir)
+            if mode == 'train':
+                time.sleep(2)
+            else:
+                shutil.rmtree(save_model_dir)
+                time.sleep(2)
+                os.mkdir(save_model_dir)
         train_model_path = os.path.join(save_model_dir, 'model_best_%d'%(iter))
         torch.save(state, train_model_path)
         return train_model_path
@@ -233,7 +236,7 @@ class Train(object):
 
 
 
-    def train_one_batch_mixer(self, batch, alpha, beta, mixer_fisrt_N_steps_use_XENT):
+    def train_one_batch_mixer(self, batch, alpha_in, beta_in, mixer_fisrt_N_steps_use_XENT):
 
         #
         # print("BATCH")
@@ -310,8 +313,8 @@ class Train(object):
                 alpha = 1.
                 beta = 1.
             else:
-                alpha = alpha
-                beta = beta
+                alpha = alpha_in
+                beta = beta_in
 
             # print("alphdabeta")
             # print(alpha)

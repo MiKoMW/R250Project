@@ -7,8 +7,8 @@ isDSTC = False
 isMixer = False
 mixer_delta = 2
 mixer_T = 40
-mixer_N_XENT_step = 1000
-mixer_N_XENTRL_step = 200
+mixer_N_XENT_step = 100
+mixer_N_XENTRL_step = 100
 not_normalise_reward = False
 
 root_dir = os.path.expanduser("~")
@@ -24,10 +24,10 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../dstc9/dstc9_vocab.txt"
 
-log_root = "../woz_bleurl_fine"
+log_root = "../woz_mle_all"
 
 # Hyperparameters
-mode = "RL"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -55,4 +55,4 @@ eps = 1e-12
 use_gpu = True
 
 
-min_earlyStopping = 8000
+min_earlyStopping = 4000
