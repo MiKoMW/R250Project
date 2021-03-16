@@ -8,7 +8,7 @@ isMixer = True
 mixer_delta = 2
 mixer_T = 40
 mixer_N_XENT_step = 1000
-mixer_N_XENTRL_step = 1000
+mixer_N_XENTRL_step = 200
 not_normalise_reward = False
 
 root_dir = os.path.expanduser("~")
@@ -24,7 +24,7 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../dstc9/dstc9_vocab.txt"
 
-log_root = "../woz_mixdagger_30k_fine"
+log_root = "../woz_mixdagger_30k_fine_step200"
 
 # Hyperparameters
 mode = "Dagger"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER

@@ -106,6 +106,8 @@ def compute_reward(batch, decode_batch, vocab, mode, use_cuda):
             except ValueError:
                 words = words
             decode_sent = ' '.join(words)
+
+            # TODO change to BLEU
             all_rewards[i, j] = rouge_2(target_sents[i], decode_sent)
     batch_avg_reward = torch.mean(all_rewards, dim=1, keepdim=True)  # B x 1
     
