@@ -1,3 +1,4 @@
+import nltk
 from torch.autograd import Variable
 import numpy as np
 import torch
@@ -108,7 +109,9 @@ def compute_reward(batch, decode_batch, vocab, mode, use_cuda):
             decode_sent = ' '.join(words)
 
             # TODO change to BLEU
-            all_rewards[i, j] = rouge_2(target_sents[i], decode_sent)
+            # all_rewards[i, j] = rouge_2(target_sents[i], decode_sent)
+            all_rewards[i, j] = nltk.translate.bleu_score.sentence_bleu([target_sents[i]], decode_sent, weights = (0.5, 0.5))
+
     batch_avg_reward = torch.mean(all_rewards, dim=1, keepdim=True)  # B x 1
     
     ones = torch.ones((config.batch_size, config.sample_size))
