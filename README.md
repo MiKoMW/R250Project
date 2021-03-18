@@ -1,5 +1,8 @@
-# A Unified Reinforcement Learning Framework for Pointer Generator Model
-This repository contains the data and code for the paper ["An Empirical Comparison on Imitation Learning and Reinforcement Learning for Paraphrase Generation"](https://arxiv.org/abs/1908.10835).
+
+
+# Code for R250 Mini Project :An Empirical Comparison on Imitation Learning and Reinforcement Learning for Dialogue Response Generation
+
+The code in this repository is largely borrowed from: https://github.com/wyu-du/Reinforce-Paraphrase-Generation and https://github.com/andy194673/nlg-sclstm-multiwoz
 
 ## Useage
 ### Training
