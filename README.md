@@ -1,6 +1,8 @@
 
 
-# Code for R250 Mini Project :An Empirical Comparison on Imitation Learning and Reinforcement Learning for Dialogue Response Generation
+# Code for R250 Mini Project
+
+An Empirical Comparison on Imitation Learning and Reinforcement Learning for Dialogue Response Generation
 
 The code in this repository is largely borrowed from: https://github.com/wyu-du/Reinforce-Paraphrase-Generation and https://github.com/andy194673/nlg-sclstm-multiwoz
 
