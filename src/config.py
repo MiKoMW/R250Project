@@ -7,9 +7,12 @@ isDSTC = False
 isMixer = False
 mixer_delta = 2
 mixer_T = 40
-mixer_N_XENT_step = 100
-mixer_N_XENTRL_step = 100
-not_normalise_reward = False
+mixer_N_XENT_step = 2000
+mixer_N_XENTRL_step = 2000
+not_normalise_reward = True
+
+increasing_rl = False
+
 
 root_dir = os.path.expanduser("~")
 root_dir = os.path.join(root_dir, "Desktop")
@@ -24,10 +27,10 @@ vocab_path = "../resource/woz3/woz_vocab.txt"
 if isDSTC:
     vocab_path = "../dstc9/dstc9_vocab.txt"
 
-log_root = "../woz_mle_all"
+log_root = "../woz_da_pre_all"
 
 # Hyperparameters
-mode = "MLE"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
+mode = "DAGGER"   # other options: MLE/RL/GTI/SO/SIO/DAGGER/DAGGER*/MIXER
 alpha = 1.0
 beta = 1.0
 k1 = 0.9999
@@ -42,7 +45,7 @@ beam_size= 8
 min_dec_steps= 5
 vocab_size= 5000
 
-max_iterations = 30000
+max_iterations = 50000
 lr = 1e-5
 pointer_gen = True
 is_coverage = False
@@ -55,4 +58,4 @@ eps = 1e-12
 use_gpu = True
 
 
-min_earlyStopping = 4000
+min_earlyStopping = 20000

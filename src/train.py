@@ -363,8 +363,14 @@ class Train(object):
         all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, config.mode, use_cuda) # B x S, 1
         batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
         loss = torch.mean(batch_loss)
+        if config.increasing_rl:
+            temp_loss = loss * (40 - mixer_fisrt_N_steps_use_XENT)/40
+            # print(mixer_fisrt_N_steps_use_XENT)
+        else:
+            temp_loss = loss
+        temp_loss.backward()
 
-        loss.backward()
+        # loss.backward()
 
         self.norm = clip_grad_norm_(self.model.encoder.parameters(), config.max_grad_norm)
         clip_grad_norm_(self.model.decoder.parameters(), config.max_grad_norm)
@@ -532,9 +538,16 @@ class Train(object):
             all_rewards, avg_reward = compute_reward(batch, gen_summary, self.vocab, config.mode, use_cuda)  # B x S, 1
             batch_loss = torch.sum(nll * all_rewards, dim=1)  # B
             loss_2 = torch.mean(batch_loss)
-        loss = loss_1 + loss_2
+        loss = (loss_1 + loss_2)
+        if config.increasing_rl:
+            temp_loss = loss * (40 - mixer_fisrt_N_steps_use_XENT)/40
+            # print(mixer_fisrt_N_steps_use_XENT)
+        else:
+            temp_loss = loss
+        temp_loss.backward()
 
-        loss.backward()
+        # loss.backward()
+        # loss.backward()
         self.norm = clip_grad_norm_(self.model.encoder.parameters(), config.max_grad_norm)
         clip_grad_norm_(self.model.decoder.parameters(), config.max_grad_norm)
         clip_grad_norm_(self.model.reduce_state.parameters(), config.max_grad_norm)
@@ -679,7 +692,7 @@ class Train(object):
                     beta = 1.
                     delay += 1
             elif config.mode == 'DAGGER':
-                alpha *= k1
+                alpha *= +k1
                 beta = 1.
             elif config.mode == 'DAGGER*':
                 alpha = config.alpha
@@ -704,8 +717,8 @@ class Train(object):
                     mixer_fisrt_N_steps_use_XENT = mixer_T - (temp_done_XENTR_turn * mixer_delta) - mixer_delta
                     if (mixer_fisrt_N_steps_use_XENT < 0):
                         mixer_fisrt_N_steps_use_XENT = 0
-                # loss, avg_reward = self.train_one_batch_mixer(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
-                loss, avg_reward = self.train_one_batch_mixer_first(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+                loss, avg_reward = self.train_one_batch_mixer(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
+                # loss, avg_reward = self.train_one_batch_mixer_first(batch, alpha, beta, mixer_fisrt_N_steps_use_XENT)
 
             else:
                 loss, avg_reward = self.train_one_batch(batch, alpha, beta)
